@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR" translate="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:url" content="https://emccamp.almav.com.br/aguasresidence/index.html">
+    <meta property="og:title" content="Águas Residence">
+    <meta property="og:site_name" content="Águas Residence">
+    <meta property="og:description" content="Mapa Interativo do Loteamento">
+    <meta property="og:image" content="favicon/og-image.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="1190">
+    <meta property="og:type" content="website">
+    <meta property="og:updated_time" content="2025-05-20T12:00:00+00:00">
+
+    <meta name="description" content="Mapa Interativo do Loteamento. Explore o Águas Residence com detalhes incríveis.">
+    <meta name="keywords" content="Mapa Interativo, Loteamento, Águas Residence, Almav">
+
+    <link rel="preconnect" href="https://maps.app.almav.com">
+
+    <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Terras" />
+    <link rel="manifest" href="site.webmanifest" />
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="canonical" href="https://emccamp.almav.com.br/aguasresidence/" />
+    <link rel='shortlink' href='https://emccamp.almav.com.br/aguasresidence/' />
+
+    <meta name="theme-color" content="#406b63">
+
+    <title>Águas Residence</title>
+    <style>
+        body {
+            margin: 0; padding: 0; background-color: #333; overflow: auto;
+            padding-top: env(safe-area-inset-top, 0);
+            padding-right: env(safe-area-inset-right, 0);
+            padding-bottom: env(safe-area-inset-bottom, 0);
+            padding-left: env(safe-area-inset-left, 0);
+        }
+        html, body, #almavMap1 { height: 100%; }
+        #almavMap1 {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+    <!-- Importante -->
+    <!-- key: é a chave de API -->
+    <!-- callback: é o nome da função que será executada após o carregamento do mapa -->
+        <script src="https://maps.app.almav.com/apiv2/js/almav-initmap.min.js?key=18ec5437-8a05-48d3-acb7-439a7b808217&callback=initMap&v=1.0" defer></script>
+</head>
+
+<body>
+    <!-- Esse é o elemento que receberá o mapa -->
+    <div id="almavMap1"></div>
+    <script>
+        /*
+            Inicializar o mapa
+            -------------------
+            * A função `initMap` será executada após o carregamento do mapa.
+            * O parâmetro da url `callback` é o nome da função que será 
+            executada após o carregamento do mapa. 
+            Por exemplo: `callback=initMap`.
+        */
+        // IMPORTANTE:
+        let almavMap1;
+        function initMap() {
+            // Criar o objeto do mapa
+            almavMap1 = new almav.maps.Map(document.getElementById('almavMap1'), {
+                fitBounds: true, // Ajustar o zoom para os limites dos elementos
+                bearing: 0, // Ângulo de rotação do mapa
+                maxPitch: 55, // Inclinação máxima do mapa
+                showZoom: true, // mostra botões de zoom in e zoom out
+                maxZoom: 19,
+                minZoom: 5,
+                showCompass: false,
+                showCompassAlt: { show: true, position: 'top-right', order: -1, title: 'Mostrar direção do Norte' },
+                geolocate: { show: true, order: 99, message: 'permitir GPS', timeout: 15000 },
+                almavLogo: true,
+                almavAttribution: true,
+                layersReady: () => waitForMap(almavMap1), // Esperar o mapa ser carregado
+            });
+        }
+
+        // Função para aguardar o carregamento do mapa
+        window.waitForMap = (mapInstance) => {
+            // Registra a instância do mapa para uso global
+            almavAppMap.registerMapInstance('almavMap1', mapInstance);
+            
+            // Inicializa os componentes do mapa
+            almavAppMap.addLayerLabelsMap(mapInstance);
+            almavAppMap.addPerspectiveButton(mapInstance);
+        }
+    </script>
+
+    <!-- Opcional: Impedir que smartphones desliguem a tela durante o uso -->
+    <!-- Autor: https://github.com/richtr/NoSleep.js.git -->
+    <script src="https://maps.app.almav.com/apiv2/assets/vendor/richtr/NoSleep.min.js"></script>
+    <script>var noSleep = new NoSleep(); noSleep.enable();</script>
+    <script>
+        // Registrar o SW para manter o Mapa Interativo operante mesmo Offline
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('https://emccamp.almav.com.br/aguasresidence/sw.js?v=1.0')
+                .then(function (registration) {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                }).catch(function (error) {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+   </script>
+</body>
+</html>
